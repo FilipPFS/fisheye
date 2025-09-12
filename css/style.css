@@ -46,13 +46,27 @@ h1 {
     gap: 10px;
 }
 
+.photographer_section article a {
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.photographer_section article a:hover,
+.photographer_section article a:focus {
+    transform: scale(1.05);
+}
+
 .photographer_section article h2 {
     color: #D3573C;
     font-size: 36px;
 }
 
 .photographer_section article small {
-    color: gray;
+    color: rgb(74, 71, 71);
 }
 
 
