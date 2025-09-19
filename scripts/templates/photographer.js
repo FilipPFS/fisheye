@@ -43,5 +43,50 @@ function photographerTemplate(data) {
 
     return article;
   }
-  return { name, picture, getUserCardDOM };
+
+  function buildPhotographerHeader() {
+    const photographersHeader = document.querySelector(".photograph-header");
+    photographersHeader.textContent = "";
+
+    const infoDiv = document.createElement("div");
+    infoDiv.classList.add("photographer-info");
+
+    const h1 = document.createElement("h1");
+    h1.textContent = name;
+
+    const location = document.createElement("h4");
+    location.textContent = `${city}, ${country}`;
+
+    const pTagline = document.createElement("p");
+    pTagline.textContent = tagline;
+
+    infoDiv.appendChild(h1);
+    infoDiv.appendChild(location);
+    infoDiv.appendChild(pTagline);
+
+    const contactDiv = document.createElement("div");
+    contactDiv.classList.add("photographer-contact");
+
+    const button = document.createElement("button");
+    button.classList.add("contact_button");
+    button.textContent = "Contactez-moi";
+    button.addEventListener("click", displayModal);
+
+    contactDiv.appendChild(button);
+
+    const portraitDiv = document.createElement("div");
+    portraitDiv.classList.add("photographer-portrait");
+
+    const img = document.createElement("img");
+    img.src = picture;
+    img.alt = name;
+
+    portraitDiv.appendChild(img);
+
+    photographersHeader.appendChild(infoDiv);
+    photographersHeader.appendChild(contactDiv);
+    photographersHeader.appendChild(portraitDiv);
+  }
+
+  return { name, picture, getUserCardDOM, buildPhotographerHeader };
 }
