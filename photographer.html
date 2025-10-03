@@ -14,34 +14,90 @@
     <header>
       <img src="assets/images/logo.png" alt="logo" class="logo" />
     </header>
-    <main id="main">
+    <main id="main" aria-hidden="false">
       <div class="photograph-header"></div>
+      <div class="filter-container">
+        <label for="media-filter">Trier par :</label>
+        <select id="media-filter" class="media-filter">
+          <option value="likes">Popularité</option>
+          <option value="date">Date</option>
+          <option value="title">Titre</option>
+        </select>
+      </div>
+      <div class="media-gallery"></div>
+      <div class="info-displayer"></div>
+
+      <div
+        id="lightbox"
+        class="lightbox"
+        aria-hidden="true"
+        role="dialog"
+        aria-modal="true"
+      >
+        <button
+          id="lightbox-close"
+          class="close"
+          aria-label="Fermer la lightbox"
+        >
+          &times;
+        </button>
+        <button id="lightbox-prev" class="nav prev" aria-label="Précédent">
+          &#10094;
+        </button>
+        <button id="lightbox-next" class="nav next" aria-label="Suivant">
+          &#10095;
+        </button>
+
+        <div id="lightbox-content" class="lightbox-content" tabindex="0"></div>
+        <h2 id="lightbox-title" class="lightbox-title"></h2>
+      </div>
     </main>
-    <div class="overlay"></div>
-    <div id="contact_modal">
+    <div class="overlay" tabindex="-1"></div>
+    <div
+      id="contact_modal"
+      role="dialog"
+      aria-labelledby="contact_modal_title"
+      aria-modal="true"
+      aria-hidden="true"
+    >
       <div class="modal">
         <header>
-          <h2>Contactez-moi</h2>
-          <img
-            src="assets/icons/close.svg"
-            alt="close modal"
+          <h2 id="contact_modal_title"></h2>
+          <button
+            type="button"
+            aria-label="Fermer la modale"
+            class="closeBtn"
             onclick="closeModal()"
-          />
+          >
+            <img src="assets/icons/close.svg" alt="" />
+          </button>
         </header>
-        <form>
+        <form id="contact_form">
           <div>
-            <label>Prénom</label>
-            <input />
+            <label for="firstName">Prénom</label>
+            <input id="firstName" name="firstName" type="text" required />
           </div>
-          <button class="contact_button">Envoyer</button>
+          <div>
+            <label for="lastName">Nom</label>
+            <input id="lastName" name="lastName" type="text" required />
+          </div>
+          <div>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required />
+          </div>
+          <div>
+            <label for="message">Votre message</label>
+            <textarea id="message" name="message" rows="4" required></textarea>
+          </div>
+          <button type="submit" class="contact_button">Envoyer</button>
         </form>
       </div>
     </div>
-    <div class="media-gallery"></div>
-    <div class="info-displayer"></div>
 
+    <script src="scripts/utils/lightbox.js"></script>
+    <script src="scripts/factories/MediaFactory.js"></script>
     <script src="scripts/templates/photographer.js"></script>
-    <script type="module" src="/scripts/pages/photographer.js"></script>
+    <script src="/scripts/pages/photographer.js"></script>
     <script src="/scripts/utils/contactForm.js"></script>
   </body>
 </html>

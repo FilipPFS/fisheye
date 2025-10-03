@@ -1,5 +1,3 @@
-import { MediaFactory } from "../factories/MediaFactory.js";
-
 async function getPhotographerById() {
   const params = new URLSearchParams(window.location.search);
   const id = Number(params.get("id"));
@@ -15,34 +13,30 @@ async function getPhotographerById() {
   return { photographer, medias };
 }
 
-async function displayProfilePage() {
+let currentIndex = 0;
+let mediasList = [];
+
+async function displayData() {
   const { photographer, medias } = await getPhotographerById();
-
-  const totalLikes = medias.reduce((sum, media) => sum + media.likes, 0);
-
-  const infoDisplayer = document.querySelector(".info-displayer");
-  const price = document.createElement("p");
-  const likes = document.createElement("span");
-  price.innerText = `${photographer.price} € / jour`;
-  likes.innerHTML = `
-  ${totalLikes} <img src="/assets/icons/heart.webp" alt="likes" class="like-icon" />
-`;
-
-  infoDisplayer.appendChild(likes);
-
-  infoDisplayer.appendChild(price);
-
   const photographerModel = photographerTemplate(photographer);
-  photographerModel.buildPhotographerHeader();
-
-  const gallery = document.querySelector(".media-gallery");
-  gallery.innerHTML = "";
-
-  medias.forEach((media) => {
-    const mediaModel = MediaFactory(media, photographer.name);
-    const mediaDOM = mediaModel.getMediaDOM();
-    gallery.appendChild(mediaDOM);
-  });
+  photographerModel.displayProfilePage(photographer, medias);
 }
 
-displayProfilePage();
+document.addEventListener("DOMContentLoaded", () => {
+  displayData();
+
+  const btnClose = document.getElementById("lightbox-close");
+  const btnNext = document.getElementById("lightbox-next");
+  const btnPrev = document.getElementById("lightbox-prev");
+  const lightbox = document.getElementById("lightbox");
+
+  if (btnClose) btnClose.addEventListener("click", closeLightbox);
+  if (btnNext) btnNext.addEventListener("click", nextMedia);
+  if (btnPrev) btnPrev.addEventListener("click", prevMedia);
+
+  if (lightbox) {
+    lightbox.addEventListener("click", (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+  }
+});

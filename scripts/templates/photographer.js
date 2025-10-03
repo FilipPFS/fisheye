@@ -70,7 +70,7 @@ function photographerTemplate(data) {
     const button = document.createElement("button");
     button.classList.add("contact_button");
     button.textContent = "Contactez-moi";
-    button.addEventListener("click", displayModal);
+    button.addEventListener("click", () => displayModal(name));
 
     contactDiv.appendChild(button);
 
@@ -88,5 +88,107 @@ function photographerTemplate(data) {
     photographersHeader.appendChild(portraitDiv);
   }
 
-  return { name, picture, getUserCardDOM, buildPhotographerHeader };
+  function displayProfilePage(photographer, medias) {
+    let totalLikes = medias.reduce((sum, media) => sum + media.likes, 0);
+
+    const infoDisplayer = document.querySelector(".info-displayer");
+    infoDisplayer.innerHTML = "";
+    const likesEl = document.createElement("div");
+    likesEl.className = "profile-likes";
+    likesEl.innerHTML = `${totalLikes} <img src="/assets/icons/heart.webp" alt="likes" class="like-icon" />`;
+    const priceEl = document.createElement("div");
+    priceEl.className = "profile-price";
+    priceEl.innerText = `${photographer.price} € / jour`;
+
+    infoDisplayer.appendChild(likesEl);
+    infoDisplayer.appendChild(priceEl);
+
+    const photographerModel = photographerTemplate(photographer);
+    photographerModel.buildPhotographerHeader();
+
+    const gallery = document.querySelector(".media-gallery");
+    const filterSelect = document.querySelector("#media-filter");
+
+    mediasList = medias
+      .map((m) => ({
+        ...m,
+        photographerName: photographer.name,
+      }))
+      .sort((a, b) => b.likes - a.likes);
+
+    function renderGallery(list) {
+      gallery.innerHTML = "";
+
+      list.forEach((media) => {
+        const mediaModel = MediaFactory(media, photographer.name);
+        const mediaDOM = mediaModel.getMediaDOM({
+          mode: "gallery",
+          withTitle: true,
+          withLikes: true,
+        });
+
+        const likeBtn = mediaDOM.querySelector(".like-btn");
+        const likesCount = mediaDOM.querySelector(".likes-count");
+
+        let isLiked = false;
+        if (likeBtn && likesCount) {
+          likeBtn.addEventListener("click", () => {
+            if (!isLiked) {
+              media.likes++;
+              totalLikes++;
+              isLiked = true;
+            } else {
+              media.likes--;
+              totalLikes--;
+              isLiked = false;
+            }
+            likesCount.innerText = media.likes;
+            document.querySelector(
+              ".profile-likes"
+            ).innerHTML = `${totalLikes} <img src="/assets/icons/heart.webp" alt="likes" class="like-icon" />`;
+          });
+        }
+
+        const thumb = mediaDOM.querySelector(".media-thumb");
+        if (thumb) {
+          thumb.addEventListener("click", () => {
+            console.log(media);
+            openLightbox(list.indexOf(media));
+          });
+          thumb.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              openLightbox(list.indexOf(media));
+            }
+          });
+        }
+
+        gallery.appendChild(mediaDOM);
+      });
+    }
+
+    renderGallery(mediasList);
+
+    filterSelect.addEventListener("change", (e) => {
+      const value = e.target.value;
+
+      if (value === "likes") {
+        mediasList.sort((a, b) => b.likes - a.likes);
+      } else if (value === "date") {
+        mediasList.sort((a, b) => new Date(b.date) - new Date(a.date));
+      } else if (value === "title") {
+        mediasList.sort((a, b) => a.title.localeCompare(b.title));
+      }
+
+      renderGallery(mediasList);
+    });
+  }
+
+  return {
+    name,
+    picture,
+    getUserCardDOM,
+    buildPhotographerHeader,
+    displayProfilePage,
+  };
 }
