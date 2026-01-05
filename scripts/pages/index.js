@@ -1,3 +1,6 @@
+import { photographerTemplate } from "../templates/photographer.js";
+
+// Fetch pour obtenir les photographeurs
 async function getPhotographers() {
   const response = await fetch("../../data/photographers.json", {
     method: "GET",
@@ -13,6 +16,7 @@ async function getPhotographers() {
   return data;
 }
 
+// Fonction d'affiachage de données
 async function displayData(photographers) {
   const photographersSection = document.querySelector(".photographer_section");
 

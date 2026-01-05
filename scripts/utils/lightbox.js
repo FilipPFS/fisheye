@@ -1,10 +1,10 @@
-function openLightbox(index) {
-  if (!mediasList || mediasList.length === 0) return;
+import { MediaFactory } from "../factories/MediaFactory.js";
+import { mediasList, currentIndex, setCurrentIndex } from "../utils/states.js";
 
-  if (index < 0) index = 0;
-  if (index >= mediasList.length) index = mediasList.length - 1;
+export function openLightbox(index, list = mediasList) {
+  if (!list || list.length === 0) return;
 
-  currentIndex = index;
+  setCurrentIndex(index);
 
   const lightbox = document.getElementById("lightbox");
   const content = document.getElementById("lightbox-content");
@@ -13,7 +13,8 @@ function openLightbox(index) {
   content.innerHTML = "";
   titleEl.textContent = "";
 
-  const media = mediasList[currentIndex];
+  // On affiche le média grâce à son index
+  const media = list[index];
   const mediaModel = MediaFactory(media, media.photographerName);
   const mediaDOM = mediaModel.getMediaDOM({ mode: "lightbox" });
 
@@ -28,31 +29,34 @@ function openLightbox(index) {
   if (firstFocusable) firstFocusable.focus();
 }
 
-function closeLightbox() {
+export function closeLightbox() {
   const lightbox = document.getElementById("lightbox");
   lightbox.classList.remove("active");
   lightbox.setAttribute("aria-hidden", "true");
   document.body.style.overflow = "";
 }
 
-function nextMedia() {
+export function nextMedia() {
   if (!mediasList || mediasList.length === 0) return;
 
-  currentIndex++;
-  if (currentIndex >= mediasList.length) currentIndex = 0;
+  let nextIndex = currentIndex + 1;
+  if (nextIndex >= mediasList.length) nextIndex = 0;
 
-  openLightbox(currentIndex);
+  setCurrentIndex(nextIndex);
+  openLightbox(nextIndex);
 }
 
-function prevMedia() {
+export function prevMedia() {
   if (!mediasList || mediasList.length === 0) return;
 
-  currentIndex--;
-  if (currentIndex < 0) currentIndex = mediasList.length - 1;
+  let prevIndex = currentIndex - 1;
+  if (prevIndex < 0) prevIndex = mediasList.length - 1;
 
-  openLightbox(currentIndex);
+  setCurrentIndex(prevIndex);
+  openLightbox(prevIndex);
 }
 
+// Accessibilité avec le clavier
 document.addEventListener("keydown", (e) => {
   const lightbox = document.getElementById("lightbox");
   if (!lightbox.classList.contains("active")) return;

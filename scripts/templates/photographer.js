@@ -1,8 +1,15 @@
-function photographerTemplate(data) {
+import { MediaFactory } from "../factories/MediaFactory.js";
+import { displayModal } from "../utils/contactForm.js";
+import { openLightbox } from "../utils/lightbox.js";
+import { setCurrentIndex, setMediasList } from "../utils/states.js";
+
+export function photographerTemplate(data) {
+  // Destructure de données d'un photographeur
   const { name, portrait, city, country, tagline, price, id } = data;
 
   const picture = `assets/photographers/${portrait}`;
 
+  // Création d'une carde sur la page d'accueil
   function getUserCardDOM() {
     const article = document.createElement("article");
 
@@ -44,6 +51,7 @@ function photographerTemplate(data) {
     return article;
   }
 
+  // Création du header sur la page de photographeur
   function buildPhotographerHeader() {
     const photographersHeader = document.querySelector(".photograph-header");
     photographersHeader.textContent = "";
@@ -88,7 +96,9 @@ function photographerTemplate(data) {
     photographersHeader.appendChild(portraitDiv);
   }
 
+  // Affichage des données sur la page photographeur
   function displayProfilePage(photographer, medias) {
+    // Calcul du total des likes des médias du photographeur
     let totalLikes = medias.reduce((sum, media) => sum + media.likes, 0);
 
     const infoDisplayer = document.querySelector(".info-displayer");
@@ -109,17 +119,20 @@ function photographerTemplate(data) {
     const gallery = document.querySelector(".media-gallery");
     const filterSelect = document.querySelector("#media-filter");
 
-    mediasList = medias
+    const mediasList = medias
       .map((m) => ({
         ...m,
         photographerName: photographer.name,
       }))
       .sort((a, b) => b.likes - a.likes);
 
+    setMediasList(mediasList);
+
+    // On génére dynamiquement la liste des médias avec les medias en paramètres
     function renderGallery(list) {
       gallery.innerHTML = "";
 
-      list.forEach((media) => {
+      list.forEach((media, idx) => {
         const mediaModel = MediaFactory(media, photographer.name);
         const mediaDOM = mediaModel.getMediaDOM({
           mode: "gallery",
@@ -149,17 +162,12 @@ function photographerTemplate(data) {
           });
         }
 
+        // Mode lightbox
         const thumb = mediaDOM.querySelector(".media-thumb");
         if (thumb) {
           thumb.addEventListener("click", () => {
-            console.log(media);
-            openLightbox(list.indexOf(media));
-          });
-          thumb.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              openLightbox(list.indexOf(media));
-            }
+            setCurrentIndex(idx);
+            openLightbox(idx, list);
           });
         }
 
@@ -169,6 +177,7 @@ function photographerTemplate(data) {
 
     renderGallery(mediasList);
 
+    // Fonction qui permet d'avoir le tri sur la gallerie
     filterSelect.addEventListener("change", (e) => {
       const value = e.target.value;
 

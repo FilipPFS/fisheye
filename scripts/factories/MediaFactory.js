@@ -1,8 +1,9 @@
-function MediaFactory(media, photographerName) {
+export function MediaFactory(media, photographerName) {
   const { title, image, video } = media || {};
   const assetName = (photographerName || "").split(" ")[0] || "";
   const mediaPath = `assets/medias/${assetName}/`;
 
+  // Détermine si on crée une image ou une vidéo (élèment HTML)
   function createMediaElement(isLightbox = false) {
     if (image) {
       const img = document.createElement("img");

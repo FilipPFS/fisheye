@@ -1,4 +1,9 @@
+import { photographerTemplate } from "../templates/photographer.js";
+import { closeLightbox, nextMedia, prevMedia } from "../utils/lightbox.js";
+
+// Fetch d'un seul photographeurs et ses médias
 async function getPhotographerById() {
+  // Provient de l'URL
   const params = new URLSearchParams(window.location.search);
   const id = Number(params.get("id"));
 
@@ -13,15 +18,13 @@ async function getPhotographerById() {
   return { photographer, medias };
 }
 
-let currentIndex = 0;
-let mediasList = [];
-
 async function displayData() {
   const { photographer, medias } = await getPhotographerById();
   const photographerModel = photographerTemplate(photographer);
   photographerModel.displayProfilePage(photographer, medias);
 }
 
+// Event listeners pour les buttons de lightbox
 document.addEventListener("DOMContentLoaded", () => {
   displayData();
 
