@@ -6,6 +6,15 @@ body.modal-open {
     display: none;
 }
 
+nav {
+    padding: 0px 80px;
+    text-decoration: none;
+}
+
+nav a {
+    text-decoration: none;
+}
+
 .photograph-header {
     background-color: #FAFAFA;
     height: 300px;
@@ -31,7 +40,7 @@ body.modal-open {
     color: red;
 }
 
-.photographer-info h4 {
+.photographer-info span {
     font-size: 20px;
     color: red;
 }

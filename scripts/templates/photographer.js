@@ -36,7 +36,6 @@ export function photographerTemplate(data) {
 
     const spanTagline = document.createElement("span");
     spanTagline.textContent = tagline;
-    spanTagline.setAttribute("aria-label", `Slogan : ${tagline}`);
 
     const smallPrice = document.createElement("small");
     smallPrice.textContent = `${price}€/jour`;
@@ -62,7 +61,7 @@ export function photographerTemplate(data) {
     const h1 = document.createElement("h1");
     h1.textContent = name;
 
-    const location = document.createElement("h4");
+    const location = document.createElement("span");
     location.textContent = `${city}, ${country}`;
 
     const pTagline = document.createElement("p");
