@@ -32,14 +32,12 @@ export function photographerTemplate(data) {
 
     const spanCity = document.createElement("span");
     spanCity.textContent = `${city}, ${country}`;
-    spanCity.setAttribute("aria-label", `Localisation : ${city}, ${country}`);
 
     const spanTagline = document.createElement("span");
     spanTagline.textContent = tagline;
 
     const smallPrice = document.createElement("small");
     smallPrice.textContent = `${price}€/jour`;
-    smallPrice.setAttribute("aria-label", `Tarif journalier : ${price} euros`);
 
     article.appendChild(link);
     infoBlock.appendChild(spanCity);
